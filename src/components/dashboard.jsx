@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Search, User, Award, Activity, XCircle, Mail, Phone, MapPin, TrendingUp,
   Users, BookOpen, Trophy, Star, ChevronRight, Clock, CheckCircle, Play, Zap, Leaf,
-  Home, Settings, BarChart3, HelpCircle, Trees, Heart, MessageCircle, Share2
+  Home, Settings, BarChart3, HelpCircle, Trees, Heart, MessageCircle, Share2,
+  Gamepad2, Info, Menu, X, Sun, Moon
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -10,12 +11,171 @@ import {
 } from 'recharts';
 
 const App = () => {
+  // Theme and language states
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [language, setLanguage] = useState('en');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  // Handle scroll for navbar effect
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleLanguage = () => setLanguage(language === 'en' ? 'hi' : 'en');
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
+
+  const themeClasses = {
+    nav: isDarkMode ? 'bg-gray-900/95' : 'bg-white/95',
+    accent: isDarkMode ? 'from-emerald-400 to-green-400' : 'from-emerald-600 to-green-600',
+    button: isDarkMode ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-500 text-white hover:bg-emerald-600',
+    navButton: isDarkMode ? 'bg-gray-800 text-gray-200 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+    textSecondary: isDarkMode ? 'text-gray-300' : 'text-gray-600',
+    link: isDarkMode ? 'text-emerald-400' : 'text-green-600'
+  };
+
+  const t = {
+    nav: {
+      home: language === 'en' ? 'Home' : 'घर',
+      login: language === 'en' ? 'Login' : 'लॉगिन',
+      dashboard: language === 'en' ? 'Dashboard' : 'डैशबोर्ड',
+      game: language === 'en' ? 'Games' : 'खेल',
+      quizzes: language === 'en' ? 'Quizzes' : 'प्रश्नोत्तरी',
+      about: language === 'en' ? 'About' : 'के बारे में'
+    }
+  };
+
+  const navItems = [
+    { key: 'home', href: '/', icon: Home, text: t.nav.home },
+    { key: 'login', href: '/login', icon: User, text: t.nav.login },
+    { key: 'dashboard', href: '/dashboard', icon: BarChart3, text: t.nav.dashboard },
+    { key: 'game', href: '/waste', icon: Gamepad2, text: t.nav.game },
+    { key: 'quizzes', href: '/quiz', icon: HelpCircle, text: t.nav.quizzes },
+    { key: 'about', href: '#', icon: Info, text: t.nav.about }
+  ];
+
+  const DashboardNavbar = () => (
+    <nav className={`${themeClasses.nav} sticky top-0 z-50 transition-all duration-500 ease-in-out ${scrollY > 50 ? 'py-2' : 'py-4'} backdrop-blur-xl border-b border-emerald-300 shadow-xl`}>
+      <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center group cursor-pointer">
+            <div className="relative">
+              <Leaf className={`h-10 w-10 text-emerald-500 group-hover:text-emerald-400 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110`} />
+              <div className={`absolute inset-0 bg-emerald-400/20 rounded-full blur-lg group-hover:bg-emerald-300/30 transition-all duration-300 group-hover:scale-150`}></div>
+            </div>
+            <span className={`ml-3 text-2xl font-bold bg-gradient-to-r ${themeClasses.accent} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300`}>
+              EcoMitra
+            </span>
+            <div className="ml-3 flex space-x-1">
+              <div className={`w-2 h-2 bg-emerald-400 rounded-full animate-ping`}></div>
+              <div className={`w-2 h-2 bg-green-400 rounded-full animate-ping delay-100`}></div>
+              <div className={`w-2 h-2 bg-emerald-500 rounded-full animate-ping delay-200`}></div>
+            </div>
+          </div>
+
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-8">
+              <a href="/" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <Home className="h-4 w-4 mr-1" />
+                {t.nav.home}
+              </a>
+              <a href="/login" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <User className="h-4 w-4 mr-1" />
+                {t.nav.login}
+              </a>
+              <a href="/dashboard" className="text-green-800 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <BarChart3 className="h-4 w-4 mr-1" />
+                {t.nav.dashboard}
+              </a>
+              <a href="/waste" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <Gamepad2 className="h-4 w-4 mr-1" />
+                {t.nav.game}
+              </a>
+              <a href="/quiz" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <HelpCircle className="h-4 w-4 mr-1" />
+                {t.nav.quizzes}
+              </a>
+              <a href="#" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                <Info className="h-4 w-4 mr-1" />
+                {t.nav.about}
+              </a>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <button 
+              onClick={toggleDarkMode} 
+              className={`p-3 rounded-full transition-all duration-500 transform hover:scale-110 ${
+                isDarkMode 
+                  ? 'bg-amber-400/25 text-amber-400 hover:bg-amber-400/35 shadow-lg shadow-amber-400/25' 
+                  : 'bg-purple-500/25 text-purple-600 hover:bg-purple-500/35 shadow-lg shadow-purple-500/25'
+              } ${themeClasses.navButton}`}
+              aria-label="Toggle dark mode"
+            >
+              <div className="relative">
+                {isDarkMode ? (
+                  <Sun className="h-5 w-5 animate-spin-slow" />
+                ) : (
+                  <Moon className="h-5 w-5 animate-pulse" />
+                )}
+              </div>
+            </button>
+
+            <button 
+              onClick={toggleLanguage} 
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${themeClasses.button}`}
+            >
+              {language === 'en' ? 'हिं' : 'EN'}
+            </button>
+
+            <div className="md:hidden">
+              <button 
+                onClick={toggleMenu} 
+                className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 ${themeClasses.navButton}`}
+              >
+                <div className="relative">
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6 animate-spin" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isMenuOpen && (
+        <div className={`md:hidden ${themeClasses.nav} backdrop-blur-xl border-t ${isDarkMode ? 'border-emerald-500/30' : 'border-emerald-300'} animate-slide-down`}>
+          <div className="px-4 pt-2 pb-4 space-y-2">
+            {navItems.map((item) => (
+              <a 
+                key={item.key} 
+                href={item.href}
+                onClick={() => setIsMenuOpen(false)}
+                className={`w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 flex items-center space-x-3 transform hover:scale-105 ${themeClasses.textSecondary} hover:${themeClasses.link.split(' ')[0]} hover:bg-emerald-400/10 ${item.key === 'dashboard' ? 'bg-emerald-100 text-emerald-700' : ''}`}
+              >
+                <item.icon className="h-5 w-5" />
+                <span>{item.text}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+
   const generateAvatar = (seed, gender) => {
     const maleAvatarUrl = 'https://placehold.co/150x150/b6e3f4/282a36?text=🧑‍🦱';
     if (gender === 'male') return maleAvatarUrl;
     const femaleAvatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${seed}&backgroundColor=c0aede,b6e3f4,ffd5dc,d1d4f9,ffdfbf&features=glasses,bandana,beanie&size=150&mouth=smile,laugh&hair=straight,long&face=eyes`;
     return femaleAvatarUrl;
   };
+  
 
   function generateAchievements() {
     const all = ['🌱 Eco Warrior', '🧠 Quiz Master', '🌳 Tree Guardian', '💧 Water Saver', '⚡ Energy Efficient', '🚫 Pollution Fighter', '💡 Green Innovator', '🌍 Climate Champion', '♻ Recycle Expert', '☀ Solar Pioneer', '🌊 Ocean Protector', '🌲 Forest Defender', '🏆 Carbon Neutral'];
@@ -353,7 +513,6 @@ const App = () => {
     <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-blue-600 rounded-3xl shadow-2xl p-6 md:p-8 text-white relative overflow-hidden mb-8">
       <div className="absolute inset-0 bg-black/20"></div>
 
-      {/* centered tree logo */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center ring-2 ring-white/20 shadow-lg">
           <Trees className="w-14 h-14 md:w-20 md:h-20 text-white/90" />
@@ -391,34 +550,10 @@ const App = () => {
           </div>
         </div>
 
-        {/* nav */}
-        <nav className="mt-6">
-          <ul className="flex flex-wrap items-center gap-2 md:gap-3">
-            <li><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white text-emerald-800 font-medium hover:bg-green-50 transition shadow-sm">
-              <Home className="h-4 w-4" /><span>Home</span>
-            </button></li>
-            <li><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/90 text-emerald-900 font-medium hover:bg-white transition shadow-sm">
-              <Trophy className="h-4 w-4" /><span>Leaderboard</span>
-            </button></li>
-            <li><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/90 text-emerald-900 font-medium hover:bg-white transition shadow-sm">
-              <BarChart3 className="h-4 w-4" /><span>Analytics</span>
-            </button></li>
-            <li><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/90 text-emerald-900 font-medium hover:bg-white transition shadow-sm">
-              <Users className="h-4 w-4" /><span>Students</span>
-            </button></li>
-            <li><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/90 text-emerald-900 font-medium hover:bg-white transition shadow-sm">
-              <Settings className="h-4 w-4" /><span>Settings</span>
-            </button></li>
-            <li className="ml-auto"><button className="inline-flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-emerald-50 text-emerald-900 font-semibold hover:bg-white transition shadow-sm">
-              <HelpCircle className="h-4 w-4" /><span>Help</span>
-            </button></li>
-          </ul>
-        </nav>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32 animate-spin" style={{ animationDuration: '20s' }}></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
+        <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
       </div>
-
-      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32 animate-spin" style={{ animationDuration: '20s' }}></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
-      <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
     </div>
   );
 
@@ -689,42 +824,45 @@ const App = () => {
 
   const DashboardLayout = () => (
     <div className="flex min-h-screen bg-gray-100 font-sans text-gray-800">
-      <div className="flex-1 p-4 md:p-6 lg:p-12">
-        <DashboardHeader />
-        {showProfile ? (
-          <StudentProfile />
-        ) : (
-          <>
-            <AdvancedSearch />
-            <StoryModule />
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              <div className="md:col-span-2 xl:col-span-2">
-                <MonthlyPerformanceCharts />
-                <QuizAndGamePerformance />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
-                  <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                    <div className="bg-blue-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><Zap className="text-blue-600 h-6 w-6 md:h-8 md:w-8" /></div>
-                    <div className="font-bold text-2xl md:text-4xl text-blue-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].quizzes}</div>
-                    <div className="text-xs md:text-sm text-gray-500">Quizzes Completed (Last Month)</div>
-                  </div>
-                  <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                    <div className="bg-yellow-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><Play className="text-yellow-600 h-6 w-6 md:h-8 md:w-8" /></div>
-                    <div className="font-bold text-2xl md:text-4xl text-yellow-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].games}</div>
-                    <div className="text-xs md:text-sm text-gray-500">Games Played (Last Month)</div>
-                  </div>
-                  <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                    <div className="bg-green-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><CheckCircle className="text-green-600 h-6 w-6 md:h-8 md:w-8" /></div>
-                    <div className="font-bold text-2xl md:text-4xl text-green-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].tasks}</div>
-                    <div className="text-xs md:text-sm text-gray-500">Real-World Tasks Completed (Last Month)</div>
+      <div className="flex-1">
+        <DashboardNavbar />
+        <div className="p-4 md:p-6 lg:p-12">
+          <DashboardHeader />
+          {showProfile ? (
+            <StudentProfile />
+          ) : (
+            <>
+              <AdvancedSearch />
+              <StoryModule />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="md:col-span-2 xl:col-span-2">
+                  <MonthlyPerformanceCharts />
+                  <QuizAndGamePerformance />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mt-4 md:mt-8">
+                    <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                      <div className="bg-blue-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><Zap className="text-blue-600 h-6 w-6 md:h-8 md:w-8" /></div>
+                      <div className="font-bold text-2xl md:text-4xl text-blue-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].quizzes}</div>
+                      <div className="text-xs md:text-sm text-gray-500">Quizzes Completed (Last Month)</div>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                      <div className="bg-yellow-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><Play className="text-yellow-600 h-6 w-6 md:h-8 md:w-8" /></div>
+                      <div className="font-bold text-2xl md:text-4xl text-yellow-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].games}</div>
+                      <div className="text-xs md:text-sm text-gray-500">Games Played (Last Month)</div>
+                    </div>
+                    <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                      <div className="bg-green-100 w-12 h-12 md:w-16 md:h-16 rounded-full mx-auto flex items-center justify-center mb-4"><CheckCircle className="text-green-600 h-6 w-6 md:h-8 md:w-8" /></div>
+                      <div className="font-bold text-2xl md:text-4xl text-green-600">{monthlyPerformanceData[monthlyPerformanceData.length - 1].tasks}</div>
+                      <div className="text-xs md:text-sm text-gray-500">Real-World Tasks Completed (Last Month)</div>
+                    </div>
                   </div>
                 </div>
+                <div className="md:col-span-2 xl:col-span-1">
+                  <EnhancedLeaderboard />
+                </div>
               </div>
-              <div className="md:col-span-2 xl:col-span-1">
-                <EnhancedLeaderboard />
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

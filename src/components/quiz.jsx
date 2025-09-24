@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Award, Leaf, Zap, Users, Trophy, CheckCircle, XCircle, Star, Lock, Unlock, Sun, Moon, Home, Play, RotateCcw, ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { ChevronRight, Award, Leaf, Zap, Users, Trophy, CheckCircle, XCircle, Star, Lock, Unlock, Sun, Moon, Home, Play, RotateCcw, ArrowRight, ArrowLeft, Menu, X, User, BarChart3, Gamepad2, HelpCircle, Info, TreePine, Sprout, Sparkles } from 'lucide-react';
 
 const EcoQuizApp = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -14,6 +14,9 @@ const EcoQuizApp = () => {
   const [unlockedBadges, setUnlockedBadges] = useState(['eco-starter']);
   const [particles, setParticles] = useState([]);
   const [screenTransition, setScreenTransition] = useState('');
+  const [scrollY, setScrollY] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [language, setLanguage] = useState('en');
   const [leaderboard, setLeaderboard] = useState([
     { name: 'EcoWarrior', points: 2150, badge: 'climate-hero' },
     { name: 'GreenThumb', points: 1890, badge: 'water-saver' },
@@ -45,6 +48,52 @@ const EcoQuizApp = () => {
 
     return () => clearInterval(interval);
   }, [isDarkMode]);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const themeClasses = useMemo(() => ({
+    bg: 'bg-gradient-to-br from-white via-emerald-50 to-green-50',
+    nav: 'bg-white/95 backdrop-blur-xl border-b border-emerald-300 shadow-xl',
+    text: 'text-gray-900',
+    textSecondary: 'text-gray-700',
+    textMuted: 'text-gray-500',
+    card: 'bg-white/85 backdrop-blur-md border border-emerald-300 shadow-xl',
+    accent: 'from-emerald-600 to-green-600',
+    link: 'text-emerald-700 hover:text-emerald-800 transition-all duration-300',
+    button: 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white shadow-xl hover:shadow-emerald-500/30',
+    buttonSecondary: 'bg-white/90 border-2 border-emerald-500/70 hover:border-emerald-600 text-emerald-700 hover:bg-emerald-50 backdrop-blur-md',
+    navButton: 'bg-emerald-100/90 hover:bg-emerald-200/90 text-emerald-800 hover:text-emerald-900 border border-emerald-400 backdrop-blur-sm',
+    overlay: 'bg-white/60',
+    sectionOverlay: 'bg-white/75',
+  }), []);
+
+  const translations = useMemo(() => ({
+    en: {
+        nav: { home: 'Home', login: 'Login', dashboard: 'Dashboard', game: 'Game', quizzes: 'Quizzes', about: 'About Us' },
+    },
+    hi: {
+        nav: { home: 'होम', login: 'लॉगिन', dashboard: 'डैशबोर्ड', game: 'गेम', quizzes: 'क्विज़', about: 'हमारे बारे में' },
+    }
+  }), []);
+
+  const t = translations[language];
+
+  const toggleMenu = useCallback(() => setIsMenuOpen(!isMenuOpen), [isMenuOpen]);
+  const toggleLanguage = useCallback(() => setLanguage(language === 'en' ? 'hi' : 'en'), [language]);
+  const toggleDarkMode = useCallback(() => setIsDarkMode(!isDarkMode), [isDarkMode]);
+
+  const navItems = useMemo(() => [
+    { key: 'home', icon: Home, text: t.nav.home, href: '#' },
+    { key: 'login', icon: User, text: t.nav.login, href: '/login' },
+    { key: 'dashboard', icon: BarChart3, text: t.nav.dashboard, href: '/dashboard' },
+    { key: 'game', icon: Gamepad2, text: t.nav.game, href: '/waste' },
+    { key: 'quizzes', icon: HelpCircle, text: t.nav.quizzes, href: '/quiz' },
+    { key: 'about', icon: Info, text: t.nav.about, href: '#' }
+  ], [t]);
 
   const quizzes = [
     {
@@ -333,18 +382,27 @@ const EcoQuizApp = () => {
     handleScreenChange('quizzes');
   };
 
-  const themeClasses = isDarkMode 
-    ? 'bg-gradient-to-br from-gray-900 via-green-900 to-gray-800 text-white'
-    : 'bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50 text-gray-900';
-
   const cardClasses = isDarkMode
     ? 'bg-gray-800/50 border-gray-700/50 backdrop-blur-sm'
     : 'bg-white/70 border-gray-200/50 backdrop-blur-sm';
 
   return (
-    <div
-  className={`h-screen w-screen ${themeClasses} transition-all duration-700 overflow-x-hidden relative`}
->
+    <div className={`min-h-screen w-full ${themeClasses.bg} overflow-x-hidden transition-all duration-700 ease-in-out`}>
+      {/* Enhanced Animated Background Elements */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <div className={`absolute top-20 left-10 w-96 h-96 bg-gradient-to-r ${isDarkMode ? 'from-emerald-500/10 to-green-500/10' : 'from-emerald-300/20 to-green-300/20'} rounded-full blur-3xl animate-pulse`}></div>
+        <div className={`absolute top-60 right-20 w-80 h-80 bg-gradient-to-r ${isDarkMode ? 'from-green-500/10 to-emerald-500/10' : 'from-green-300/20 to-emerald-300/20'} rounded-full blur-3xl animate-pulse delay-1000`}></div>
+        <div className={`absolute bottom-40 left-1/3 w-72 h-72 bg-gradient-to-r ${isDarkMode ? 'from-emerald-400/10 to-teal-500/10' : 'from-emerald-200/30 to-teal-300/30'} rounded-full blur-3xl animate-pulse delay-2000`}></div>
+        <div className="absolute top-32 left-20 animate-bounce delay-500">
+          <TreePine className={`h-8 w-8 ${isDarkMode ? 'text-emerald-400/30' : 'text-emerald-500/50'} transition-colors duration-700`} />
+        </div>
+        <div className="absolute top-96 right-32 animate-bounce delay-1000">
+          <Sprout className={`h-6 w-6 ${isDarkMode ? 'text-green-400/30' : 'text-green-500/50'} transition-colors duration-700`} />
+        </div>
+        <div className="absolute bottom-60 right-16 animate-bounce delay-1500">
+          <Leaf className={`h-10 w-10 ${isDarkMode ? 'text-emerald-400/30' : 'text-emerald-500/50'} transition-colors duration-700`} />
+        </div>
+      </div>
 
       {/* Animated Background Particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -365,31 +423,121 @@ const EcoQuizApp = () => {
         ))}
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 p-4 sm:p-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="text-2xl sm:text-3xl animate-bounce">🌍</div>
-            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-              EcoQuiz Pro
-            </h1>
-          </div>
-          
-          <div className="flex items-center space-x-4 sm:space-x-6">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 sm:px-4 py-2 rounded-full shadow-lg text-sm sm:text-base">
-              <Leaf className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="font-semibold">{ecoPoints.toLocaleString()} EcoPoints</span>
+      {/* Enhanced Navigation with Fixed Theme Integration */}
+      <nav className={`${themeClasses.nav} sticky top-0 z-50 transition-all duration-500 ease-in-out ${scrollY > 50 ? 'py-2' : 'py-4'}`}>
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center group cursor-pointer">
+              <div className="relative">
+                <Leaf className={`h-10 w-10 text-emerald-500 group-hover:text-emerald-400 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110`} />
+                <div className={`absolute inset-0 bg-emerald-400/20 rounded-full blur-lg group-hover:bg-emerald-300/30 transition-all duration-300 group-hover:scale-150`}></div>
+              </div>
+              <span className={`ml-3 text-2xl font-bold bg-gradient-to-r ${themeClasses.accent} bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300`}>
+                EcoMitra
+              </span>
+              <div className="ml-3 flex space-x-1">
+                <div className={`w-2 h-2 bg-emerald-400 rounded-full animate-ping`}></div>
+                <div className={`w-2 h-2 bg-green-400 rounded-full animate-ping delay-100`}></div>
+                <div className={`w-2 h-2 bg-emerald-500 rounded-full animate-ping delay-200`}></div>
+              </div>
             </div>
-            
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`p-2 sm:p-3 rounded-full ${cardClasses} border-2 hover:scale-110 transition-all duration-300 shadow-lg`}
-            >
-              {isDarkMode ? <Sun className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400" /> : <Moon className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />}
-            </button>
+
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-8">
+                <a href="#" className="text-green-800 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <Home className="h-4 w-4 mr-1" />
+                  {t.nav.home}
+                </a>
+                <a href="/login" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <User className="h-4 w-4 mr-1" />
+                  {t.nav.login}
+                </a>
+                <a href="/dashboard" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <BarChart3 className="h-4 w-4 mr-1" />
+                  {t.nav.dashboard}
+                </a>
+                <a href="/waste" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <Gamepad2 className="h-4 w-4 mr-1" />
+                  {t.nav.game}
+                </a>
+                <a href="/quiz" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <HelpCircle className="h-4 w-4 mr-1" />
+                  {t.nav.quizzes}
+                </a>
+                <a href="#" className="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                  <Info className="h-4 w-4 mr-1" />
+                  {t.nav.about}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 sm:px-4 py-2 rounded-full shadow-lg text-sm sm:text-base">
+                <Leaf className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span className="font-semibold">{ecoPoints.toLocaleString()} EcoPoints</span>
+              </div>
+
+              <button 
+                onClick={toggleDarkMode} 
+                className={`p-3 rounded-full transition-all duration-500 transform hover:scale-110 ${
+                  isDarkMode 
+                    ? 'bg-amber-400/25 text-amber-400 hover:bg-amber-400/35 shadow-lg shadow-amber-400/25' 
+                    : 'bg-purple-500/25 text-purple-600 hover:bg-purple-500/35 shadow-lg shadow-purple-500/25'
+                } ${themeClasses.navButton}`}
+                aria-label="Toggle dark mode"
+              >
+                <div className="relative">
+                  {isDarkMode ? (
+                    <Sun className="h-5 w-5 animate-spin-slow" />
+                  ) : (
+                    <Moon className="h-5 w-5 animate-pulse" />
+                  )}
+                </div>
+              </button>
+
+              <button 
+                onClick={toggleLanguage} 
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${themeClasses.button}`}
+              >
+                {language === 'en' ? 'हिं' : 'EN'}
+              </button>
+
+              <div className="md:hidden">
+                <button 
+                  onClick={toggleMenu} 
+                  className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 ${themeClasses.navButton}`}
+                >
+                  <div className="relative">
+                    {isMenuOpen ? (
+                      <X className="h-6 w-6 animate-spin" />
+                    ) : (
+                      <Menu className="h-6 w-6" />
+                    )}
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
+
+        {isMenuOpen && (
+          <div className={`md:hidden ${themeClasses.nav} backdrop-blur-xl border-t ${isDarkMode ? 'border-emerald-500/30' : 'border-emerald-300'} animate-slide-down`}>
+            <div className="px-4 pt-2 pb-4 space-y-2">
+              {navItems.map((item) => (
+                <a 
+                  key={item.key} 
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 flex items-center space-x-3 transform hover:scale-105 ${themeClasses.textSecondary} hover:bg-emerald-400/10`}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span>{item.text}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </nav>
 
       {/* Navigation */}
       {currentScreen !== 'home' && (
@@ -783,7 +931,7 @@ const EcoQuizApp = () => {
         <p className="text-xs sm:text-sm">&copy; 2025 EcoQuiz Pro - Making environmental education engaging and fun</p>
       </footer>
     </div>
-  );
+    );
 };
 
 export default EcoQuizApp;
