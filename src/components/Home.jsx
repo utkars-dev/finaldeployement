@@ -77,7 +77,7 @@ const EcomitraHomepage = () => {
           point4: 'Small steps leading to big impact on communities'
         },
         cta: { title: 'Join the Green Movement!', subtitle: 'Play, Learn, and Act for the planet with EcoMitra', description: 'Together, let\'s build a sustainable future — one game, one quiz, one habit at a time.', playBtn: 'Start Playing', learnBtn: 'Learn More' },
-        footer: 'Made with ❤️ by Team teamhactrix (SIH 2025)'
+        footer: 'Made with ❤️ by Team CipherCage (SIH 2025)'
     },
     hi: {
         nav: { home: 'होम', login: 'लॉगिन', dashboard: 'डैशबोर्ड', game: 'गेम', quizzes: 'क्विज़', about: 'हमारे बारे में' },
@@ -98,7 +98,7 @@ const EcomitraHomepage = () => {
           point4: 'छोटे कदम समुदायों पर बड़ा प्रभाव डालते हैं'
         },
         cta: { title: 'हरित आंदोलन में शामिल हों!', subtitle: 'इकोमित्र के साथ खेलें, सीखें और ग्रह के लिए कार्य करें', description: 'आइए मिलकर एक स्थायी भविष्य बनाएं — एक खेल, एक क्विज़, एक आदत के साथ।', playBtn: 'खेलना शुरू करें', learnBtn: 'और जानें' },
-        footer: 'टीम teamhactrix (SIH 2025) द्वारा ❤️ के साथ बनाया गया'
+        footer: 'टीम CipherCage (SIH 2025) द्वारा ❤️ के साथ बनाया गया'
     }
   }), []);
 
