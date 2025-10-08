@@ -77,7 +77,7 @@ const EcomitraHomepage = () => {
           point4: 'Small steps leading to big impact on communities'
         },
         cta: { title: 'Join the Green Movement!', subtitle: 'Play, Learn, and Act for the planet with EcoMitra', description: 'Together, let\'s build a sustainable future — one game, one quiz, one habit at a time.', playBtn: 'Start Playing', learnBtn: 'Learn More' },
-        footer: 'Made with ❤️ by Team CipherCage (SIH 2025)'
+        footer: 'Made with ❤️ by Team CipherCage (SWCE IEEE SB-IDEA HACKATHON 2025)'
     },
     hi: {
         nav: { home: 'होम', login: 'लॉगिन', dashboard: 'डैशबोर्ड', game: 'गेम', quizzes: 'क्विज़', about: 'हमारे बारे में' },
